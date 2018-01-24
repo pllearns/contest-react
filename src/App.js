@@ -20,7 +20,7 @@ class App extends Component {
     this.setState({ manager, players, balance });
   }
 
-  onSubmit = async (event) => {
+  onSubmit = async event => {
     event.preventDefault();
 
     this.setState({ message: 'waiting on successful entry!'})
@@ -33,6 +33,18 @@ class App extends Component {
 
     this.setState({ message: 'You are entered!'})
   };
+
+  onClick = async () => {
+
+    this.setState({message: 'waiting on a winner!'});
+    
+    const accounts = await web3.eth.getAccounts();
+    await contest.methods.pickWinner().send({
+      from: accounts[0]
+    })
+
+    this.setState({message: 'we have a winner!'})
+  }
 
   render() {
     return (
@@ -58,6 +70,10 @@ class App extends Component {
             </div>
             <button>Enter!</button>
           </form>
+          <hr />
+
+          <h4>Let's pick a winner!</h4>
+          <button onClick={this.onClick}>Pick a winner</button>
           <hr />
           <h1>{this.state.message}</h1>
       </div>
